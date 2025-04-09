@@ -51,10 +51,6 @@ function ResearcherProfileContent() {
         try {
           const openAlexData = await getOpenAlexResearcher(response.firstName + " " + response.lastName);
           setOpenAlexData(openAlexData);
-
-          const projects = await fetchResearchProjectForResearcher(uid);
-          setResearchProjects(Array.isArray(projects) ? projects : [projects]);
-          console.log("Research Projects:", projects);
         } catch (err) {
           console.warn("OpenAlex data not found:", err);
         }
@@ -70,6 +66,24 @@ function ResearcherProfileContent() {
       loadData();
     }
   }, [uid]);
+
+
+    useEffect(() => {
+    const fetchResearchProjects = async () => {
+      if (researcher) {
+        try {
+          const projects = await fetchResearchProjectForResearcher(researcher.uid);
+          setResearchProjects(Array.isArray(projects) ? projects : [projects]);
+          console.log("Research Projects:", projects);
+
+        } catch (error) {
+          console.error("Error fetching research projects:", error);
+        }
+      }
+    }
+    fetchResearchProjects();
+  }
+  , [researcher]);
 
   return (
     <div className="bg-white min-h-screen flex flex-col">
