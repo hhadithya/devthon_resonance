@@ -49,7 +49,7 @@ function ResearcherProfileContent() {
         const loggedInUserId = localStorage.getItem('userId');
         setIsOwnProfile(loggedInUserId === uid);
         try {
-          const openAlexData = await getOpenAlexResearcher(response.firstName);
+          const openAlexData = await getOpenAlexResearcher(response.firstName + " " + response.lastName);
           setOpenAlexData(openAlexData);
 
           const projects = await fetchResearchProjectForResearcher(uid);
