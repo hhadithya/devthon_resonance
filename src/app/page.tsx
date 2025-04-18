@@ -45,31 +45,31 @@ export default function Home() {
   return (
     <div className="bg-white">
       <Navbar />
-      <div className="pt-18">
-        {/* Hero Section */}
+      <div className="pt-16 sm:pt-18">
+        {/* Hero Section - Improved for mobile */}
         <section className="relative bg-white">
-          <div className="flex flex-col-reverse md:flex-row items-stretch h-[80vh]">
+          <div className="flex flex-col-reverse md:flex-row items-stretch min-h-[60vh] md:h-[80vh]">
             {/* Left Content */}
-            <div className="md:w-1/2 flex flex-col justify-center px-8 md:px-12 py-8 md:py-0">
-              <h1 className="text-5xl font-bold text-gray-800 leading-tight">
+            <div className="md:w-1/2 flex flex-col justify-center px-6 md:px-12 py-10 md:py-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
                 Breakthrough science through collaboration
               </h1>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-4 text-base md:text-lg text-gray-600">
                 We bring great minds together to collaborate, secure funding,
                 and connect with researchers to drive groundbreaking
                 discoveries.
               </p>
               <div className="mt-6">
-                <button className="bg-[#770C0C] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition">
+                <button className="bg-[#770C0C] text-white py-2 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition w-full sm:w-auto">
                   Create Account
                 </button>
               </div>
             </div>
 
             {/* Right Image */}
-            <div className="md:w-1/2 relative h-96 md:h-auto max-md:bg-[#770C0C]">
+            <div className="md:w-1/2 relative h-64 sm:h-80 md:h-auto max-md:bg-[#770C0C]">
               <div
-                className="absolute inset-0 bg-cover bg-center "
+                className="absolute inset-0 bg-cover bg-center"
                 style={{
                   backgroundImage: "url('/hero-image.jpg')",
                   clipPath: "polygon(0 0, 100% 0, 100% 100%, 10% 100%)",
@@ -79,80 +79,80 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Research Categories */}
-        <section className="container mx-auto p-16">
-          <h2 className="text-3xl font-bold text-gray-800 text-center">
+        {/* Research Categories - Improved grid for mobile */}
+        <section className="container mx-auto px-4 py-12 sm:p-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center">
             Browse top research category
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6 mt-6 sm:mt-8">
             {[
               {
                 name: "Applied Research",
-                icon: <FaFlask className="text-[#770C0C] text-2xl" />,
+                icon: <FaFlask className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Basic Research",
-                icon: <FaBook className="text-[#770C0C] text-2xl" />,
+                icon: <FaBook className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Correlational Research",
-                icon: <FaChartLine className="text-[#770C0C] text-2xl" />,
+                icon: <FaChartLine className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Descriptive Research",
-                icon: <FaClipboardList className="text-[#770C0C] text-2xl" />,
+                icon: <FaClipboardList className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Grounded Theory",
-                icon: <GiMagnifyingGlass className="text-[#770C0C] text-2xl" />,
+                icon: <GiMagnifyingGlass className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Exploratory Research",
-                icon: <GiChemicalDrop className="text-[#770C0C] text-2xl" />,
+                icon: <GiChemicalDrop className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Experimental Research",
-                icon: <MdOutlineScience className="text-[#770C0C] text-2xl" />,
+                icon: <MdOutlineScience className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Ethnographic Research",
-                icon: <GiArchiveResearch className="text-[#770C0C] text-2xl" />,
+                icon: <GiArchiveResearch className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Historical Research",
-                icon: <FaBook className="text-[#770C0C] text-2xl" />,
+                icon: <FaBook className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Phenomenological Research",
-                icon: <FaFlask className="text-[#770C0C] text-2xl" />,
+                icon: <FaFlask className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Qualitative Research",
-                icon: <FaChartLine className="text-[#770C0C] text-2xl" />,
+                icon: <FaChartLine className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
               {
                 name: "Quantitative Research",
-                icon: <FaClipboardList className="text-[#770C0C] text-2xl" />,
+                icon: <FaClipboardList className="text-[#770C0C] text-xl sm:text-2xl" />,
               },
             ].map((category, index) => (
               <div
                 key={index}
-                className="bg-gray-100 p-4 hover:shadow-lg transition flex flex-col items-center text-center"
+                className="bg-gray-100 p-3 sm:p-4 hover:shadow-lg transition flex flex-col items-center text-center"
               >
                 {category.icon}
-                <h3 className="text-md font-semibold text-gray-800 mt-2">
+                <h3 className="text-sm sm:text-md font-semibold text-gray-800 mt-2">
                   {category.name}
                 </h3>
-                <p className="text-sm text-gray-600">12,345 Researchers</p>
+                <p className="text-xs sm:text-sm text-gray-600">12,345 Researchers</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Trending Research */}
-        <section className="bg-gray-50 p-20">
+        {/* Trending Research - Improved grid for mobile */}
+        <section className="bg-gray-50 px-4 py-12 sm:p-20">
           <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-gray-800 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center">
               Trending Research
             </h2>
             {loading ? (
@@ -160,33 +160,33 @@ export default function Home() {
                 <p className="text-gray-600">Loading trending research...</p>
               </div>
             ) : trendingResearchProjects.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 sm:mt-8">
                 {trendingResearchProjects.map((project) => (
                   // @ts-ignore
                   <ResearchCard key={project.id} project={project} />
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 sm:mt-8">
                 {Array(8)
                   .fill(0)
                   .map((_, index) => (
                     <div
                       key={index}
-                      className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition"
+                      className="bg-white p-3 sm:p-4 rounded-lg shadow hover:shadow-lg transition"
                     >
                       <Image
                         src="/research-thumbnail.jpg"
                         alt="Research Thumbnail"
                         width={300}
                         height={200}
-                        className="rounded-lg"
+                        className="rounded-lg w-full h-auto"
                       />
-                      <h3 className="mt-4 text-lg font-semibold text-gray-800">
+                      <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-gray-800">
                         Advancements in Quantum Computing
                       </h3>
-                      <p className="text-sm text-gray-600 mt-2">March 2025</p>
-                      <p className="text-sm text-gray-600">1.2K Citations</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">March 2025</p>
+                      <p className="text-xs sm:text-sm text-gray-600">1.2K Citations</p>
                     </div>
                   ))}
               </div>
@@ -194,12 +194,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Key Features */}
-        <section className="container mx-auto p-20">
-          <h2 className="text-3xl font-bold text-gray-800 text-center">
+        {/* Key Features - Improved grid for mobile */}
+        <section className="container mx-auto px-4 py-12 sm:p-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center">
             Key Features
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mt-6 sm:mt-8">
             {[
               {
                 title: "AI-Driven Research Discovery",
@@ -229,16 +229,16 @@ export default function Home() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="text-center p-4 bg-gray-100 rounded-lg shadow hover:shadow-lg transition"
+                className="text-center p-3 sm:p-4 bg-gray-100 rounded-lg shadow hover:shadow-lg transition"
               >
                 <Image
                   src={feature.icon}
                   alt={feature.alt}
-                  width={50}
-                  height={50}
-                  className="mx-auto"
+                  width={40}
+                  height={40}
+                  className="mx-auto w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
                 />
-                <h3 className="mt-4 text-lg font-semibold text-gray-800">
+                <h3 className="mt-2 sm:mt-4 text-sm sm:text-base md:text-lg font-semibold text-gray-800">
                   {feature.title}
                 </h3>
               </div>
@@ -246,30 +246,30 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Create New Research and Fund a Research Section */}
-        <section className="container mx-auto py-16 px-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8 md:px-32 py-16">
+        {/* Create New Research and Fund a Research Section - Improved spacing and layout */}
+        <section className="container mx-auto py-8 sm:py-16 px-4 sm:px-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center px-4 sm:px-8 md:px-16 lg:px-32 py-8 sm:py-16">
             {/* Create New Research */}
             <div className="flex flex-col items-center md:items-start">
               <div className="flex justify-center md:hidden mb-4">
                 <Image
                   src="/icon.png"
                   alt="Create Research Icon"
-                  width={100}
-                  height={100}
+                  width={80}
+                  height={80}
                   className="rounded-lg"
                 />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center md:text-left">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center md:text-left">
                 Create New Research
               </h2>
-              <p className="mt-4 text-gray-600 text-sm md:text-base text-center md:text-left">
+              <p className="mt-3 sm:mt-4 text-gray-600 text-sm md:text-base text-center md:text-left">
                 Turn your ideas into impactful research projects. Connect with a
                 network of experts, access essential resources, and bring your
                 vision to life with global collaboration.
               </p>
               <button
-                className="mt-6 bg-[#770C0C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition"
+                className="mt-4 sm:mt-6 bg-[#770C0C] text-white py-2 px-4 sm:px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition w-full sm:w-auto"
                 onClick={() => window.location.href = "/researchcreate"}
               >
                 Get Started
@@ -286,13 +286,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center m-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center mt-8 sm:mt-16">
             {/* Fund a Research */}
-            <div className="flex justify-center">
+            <div className="flex justify-center order-2 md:order-1">
               <svg
                 fill="#770C0C"
                 version="1.1"
-                className="w-64 h-64"
+                className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64"
                 id="Layer_1"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 245"
@@ -310,16 +310,16 @@ export default function Home() {
                 </g>
               </svg>
             </div>
-            <div className="flex flex-col items-start">
-              <h2 className="text-3xl font-bold text-gray-800">
+            <div className="flex flex-col items-center md:items-start order-1 md:order-2">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center md:text-left">
                 Fund a Research
               </h2>
-              <p className="mt-4 text-gray-600">
+              <p className="mt-3 sm:mt-4 text-gray-600 text-sm md:text-base text-center md:text-left">
                 Support groundbreaking research and drive innovation. Contribute
                 to projects that align with your interests and help researchers
                 make meaningful discoveries.
               </p>
-              <button className="mt-6 bg-[#770C0C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition">
+              <button className="mt-4 sm:mt-6 bg-[#770C0C] text-white py-2 px-4 sm:px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition w-full sm:w-auto">
                 Get Started
               </button>
             </div>

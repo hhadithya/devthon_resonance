@@ -14,6 +14,7 @@ export default function SignUp() {
     firstName: '',
     lastName: '',
     email: '',
+    ORCID: '',
     password: '',
     repeatPassword: '',
   });
@@ -54,6 +55,7 @@ export default function SignUp() {
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,
+        ORCID: form.ORCID, // Store ORCID even if empty
         uid: user.uid,
         createdAt: new Date(),
       });
@@ -81,6 +83,7 @@ export default function SignUp() {
           firstName: user.displayName?.split(' ')[0] || '',
           lastName: user.displayName?.split(' ')[1] || '',
           email: user.email,
+          ORCID: '',
           createdAt: new Date(),
           lastLogin: new Date(), 
         }, { merge: true });
@@ -192,6 +195,20 @@ export default function SignUp() {
                 name="email"
                 placeholder="Enter your email address"
                 value={form.email}
+                onChange={handleChange}
+                className="w-full px-4 py-3 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#770C0C]/30 focus:border-[#770C0C] transition-all"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-800 mb-1">
+                ORCID <span className="text-gray-500 text-xs">(optional)</span>
+              </label>
+              <input
+                type="text"
+                name="ORCID"
+                placeholder="Enter your ORCID identifier"
+                value={form.ORCID}
                 onChange={handleChange}
                 className="w-full px-4 py-3 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#770C0C]/30 focus:border-[#770C0C] transition-all"
               />
