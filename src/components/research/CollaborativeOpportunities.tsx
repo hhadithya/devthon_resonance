@@ -102,7 +102,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       // Prepare the template parameters
       const templateParams = {
         to_name: researcher.firstName,
-        to_email: researcher.email,
+        email: researcher.email,
         research_title: researchTitle,
         message: `You have been added as a collaborator to the research project "${researchTitle}". Please log in to view the details and contribute to the research.`,
         from_name: "Resonance Research Platform",
