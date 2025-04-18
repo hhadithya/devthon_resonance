@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../research/modal';
 import { Loader2 } from 'lucide-react'; 
+import emailjs from '@emailjs/browser';
 
 interface Researcher {
-  uid: string; // Changed from _id to uid
+  uid: string;
   firstName: string;
   email: string;
   specialization?: string;
@@ -25,6 +26,7 @@ interface CollaborativeOpportunitiesProps {
   onSaveAndPreview: () => void;
   onNext: () => void;
   onPrevious: () => void;
+  researchTitle?: string; // Added to include in email notifications
 }
 
 const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
@@ -33,7 +35,8 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   onSave,
   onSaveAndPreview,
   onNext,
-  onPrevious
+  onPrevious,
+  researchTitle = "New Research Project" // Default if title is not provided
 }) => {
   const [researcher, setResearcher] = useState('');
   const [researcherEmail, setResearcherEmail] = useState('');
@@ -41,6 +44,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedResearcher, setSelectedResearcher] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
+  const [emailSending, setEmailSending] = useState<{[key: string]: boolean}>({});
   
   // For display purposes - mapping UIDs to researcher information
   const [teamDisplay, setTeamDisplay] = useState<{uid: string, display: string}[]>([]);
@@ -48,6 +52,11 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   // State for researcher creation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newResearcher, setNewResearcher] = useState({ firstName: '', email: '', specialization: '', institution: '' });
+
+  // EmailJS configuration
+  const EMAIL_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'default_service';
+  const EMAIL_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_2 || 'template_collaborator_invite';
+  const EMAIL_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
 
   // Fetch researchers on component mount
   useEffect(() => {
@@ -76,17 +85,45 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app/api'}/researchers`);
       const data = await response.json();
       
-      // Log the researcher data with their UIDs
       console.log('Fetched researchers:', data);
-      data.forEach((researcher: { firstName: any; uid: any; }) => {
-        console.log(`Researcher: ${researcher.firstName}, ID: ${researcher.uid}`);
-      });
-      
       setResearchers(data);
     } catch (error) {
       console.error('Error fetching researchers:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const sendCollaboratorEmail = async (researcher: Researcher) => {
+    try {
+      // Mark this email as sending
+      setEmailSending(prev => ({ ...prev, [researcher.uid]: true }));
+      
+      // Prepare the template parameters
+      const templateParams = {
+        to_name: researcher.firstName,
+        to_email: researcher.email,
+        research_title: researchTitle,
+        message: `You have been added as a collaborator to the research project "${researchTitle}". Please log in to view the details and contribute to the research.`,
+        from_name: "Resonance Research Platform",
+      };
+      
+      // Send the email using EmailJS
+      const response = await emailjs.send(
+        EMAIL_SERVICE_ID,
+        EMAIL_TEMPLATE_ID,
+        templateParams,
+        EMAIL_PUBLIC_KEY
+      );
+      
+      console.log('Email sent successfully:', response);
+      return true;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      return false;
+    } finally {
+      // Mark this email as no longer sending
+      setEmailSending(prev => ({ ...prev, [researcher.uid]: false }));
     }
   };
 
@@ -123,10 +160,16 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
         
         if (response.ok) {
           const newResearcherData = await response.json();
+          
           // Add the researcher UID to the team
           onChange({ team: [...data.team, newResearcherData.uid] });
+          
           // Add to researchers list for display
           setResearchers([...researchers, newResearcherData]);
+          
+          // Send invitation email
+          await sendCollaboratorEmail(newResearcherData);
+          
           // Reset form fields
           setResearcher('');
           setResearcherEmail('');
@@ -139,13 +182,20 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     }
   };
 
-  const handleSelectResearcher = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectResearcher = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const researcherUid = e.target.value;
     if (!researcherUid) return;
     
     // Check if researcher UID is already in team
     if (!data.team.includes(researcherUid)) {
+      // Add to team
       onChange({ team: [...data.team, researcherUid] });
+      
+      // Find the researcher object to send email
+      const selectedResearcher = researchers.find(r => r.uid === researcherUid);
+      if (selectedResearcher) {
+        await sendCollaboratorEmail(selectedResearcher);
+      }
     }
     setSelectedResearcher('');
   };
@@ -171,11 +221,15 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       
       if (response.ok) {
         const createdResearcher = await response.json();
+        
         // Add the researcher to our list
         setResearchers([...researchers, createdResearcher]);
         
         // Add the researcher UID to the team
         onChange({ team: [...data.team, createdResearcher.uid] });
+        
+        // Send invitation email
+        await sendCollaboratorEmail(createdResearcher);
         
         // Reset form and close modal
         setNewResearcher({ firstName: '', email: '', specialization: '', institution: '' });
@@ -193,8 +247,21 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     }
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     setIsPublishing(true);
+    
+    // Send emails to all team members who haven't received an email yet
+    const emailPromises = data.team.map(uid => {
+      const researcher = researchers.find(r => r.uid === uid);
+      if (researcher && !emailSending[uid]) {
+        return sendCollaboratorEmail(researcher);
+      }
+      return Promise.resolve(true);
+    });
+    
+    // Wait for all emails to be sent before proceeding
+    await Promise.all(emailPromises);
+    
     onNext();
   };
 
@@ -384,15 +451,23 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
                 {teamDisplay.map((member, index) => (
                   <li key={index} className="flex text-pink-950 justify-between items-center pb-1">
                     <span>{member.display}</span>
-                    <button 
-                      type="button" 
-                      onClick={() => handleRemoveTeamMember(index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+                    <div className="flex items-center">
+                      {emailSending[member.uid] && (
+                        <span className="text-xs text-gray-500 mr-2 flex items-center">
+                          <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                          Sending invitation...
+                        </span>
+                      )}
+                      <button 
+                        type="button" 
+                        onClick={() => handleRemoveTeamMember(index)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
