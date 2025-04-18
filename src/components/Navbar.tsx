@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FiBell, FiBookmark, FiUser, FiSearch, FiMenu, FiX } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { auth } from '@/firebase'; 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isSearchHovered, setIsSearchHovered] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname(); // Get current pathname
 
   // Listen for authentication state changes
   useEffect(() => {
@@ -63,6 +64,25 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Function to determine if a link is active
+  const isLinkActive = (path: string) => {
+    return pathname === path;
+  };
+
+  // Function to get link styling based on active state
+  const getLinkStyle = (path: string) => {
+    return isLinkActive(path) 
+      ? "text-sm font-medium text-[#770C0C] border-b-2 border-[#770C0C] pb-1" 
+      : "text-sm font-medium text-gray-800 hover:text-[#770C0C] pb-1 hover:border-b-2 hover:border-[#770C0C]";
+  };
+
+  // Function to get mobile link styling based on active state
+  const getMobileLinkStyle = (path: string) => {
+    return isLinkActive(path)
+      ? "text-sm font-medium text-[#770C0C] py-2 border-b border-gray-100 font-bold"
+      : "text-sm font-medium text-gray-800 hover:text-[#770C0C] py-2 border-b border-gray-100";
+  };
+
   return (
     <nav className="bg-white border border-b-1 fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-4 md:px-10 py-4 flex items-center justify-between">
@@ -77,19 +97,19 @@ export default function Navbar() {
 
         {/* Navigation Links - Desktop */}
         <div className="hidden md:flex space-x-10">
-          <Link href="/" className="text-sm font-medium text-[#770C0C]">
+          <Link href="/" className={getLinkStyle('/')}>
             Home
           </Link>
-          <Link href="/about" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+          <Link href="/about" className={getLinkStyle('/about')}>
             About
           </Link>
-          <Link href="/contact" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+          <Link href="/contact" className={getLinkStyle('/contact')}>
             Contact
           </Link>
-          <Link href="/researchcreate" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+          <Link href="/researchcreate" className={getLinkStyle('/researchcreate')}>
             Become Researcher
           </Link>
-          <Link href="/Q&A" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+          <Link href="/Q&A" className={getLinkStyle('/Q&A')}>
             FAQ
           </Link>
         </div>
@@ -102,7 +122,7 @@ export default function Navbar() {
             onMouseLeave={() => setIsSearchHovered(false)}
             onClick={handleSearchClick}
           >
-            <div className="flex items-center justify-center p-2 rounded-full bg-[#FDECEC] cursor-pointer hover:bg-[#fbd2d2] transition-all duration-300 transform hover:scale-105">
+            <div className={`flex items-center justify-center p-2 rounded-full ${isLinkActive('/search') ? 'bg-[#fbd2d2]' : 'bg-[#FDECEC]'} cursor-pointer hover:bg-[#fbd2d2] transition-all duration-300 transform hover:scale-105`}>
               <FiSearch className="text-[#770C0C] text-xl" />
             </div>
             
@@ -134,12 +154,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/signup">
-                <button className="bg-[#FDECEC] text-[#770C0C] py-2 px-4 rounded-lg font-medium hover:bg-[#fbd2d2] transition">
+                <button className={`bg-[#FDECEC] text-[#770C0C] py-2 px-4 rounded-lg font-medium hover:bg-[#fbd2d2] transition ${isLinkActive('/signup') ? 'bg-[#fbd2d2] font-bold' : ''}`}>
                   Create Account
                 </button>
               </Link>
               <Link href="/signin">
-                <button className="bg-[#770C0C] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5d0a0a] transition">
+                <button className={`bg-[#770C0C] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5d0a0a] transition ${isLinkActive('/signin') ? 'bg-[#5d0a0a] font-bold' : ''}`}>
                   Sign In
                 </button>
               </Link>
@@ -153,7 +173,7 @@ export default function Navbar() {
             className="mr-4"
             onClick={handleSearchClick}
           >
-            <FiSearch className="text-[#770C0C] text-xl" />
+            <FiSearch className={`text-xl ${isLinkActive('/search') ? 'text-[#5d0a0a] font-bold' : 'text-[#770C0C]'}`} />
           </div>
         </div>
 
@@ -177,19 +197,19 @@ export default function Navbar() {
         <div className="px-4 pt-2 pb-4 space-y-4">
           {/* Navigation Links - Mobile */}
           <div className="flex flex-col space-y-3">
-            <Link href="/" className="text-sm font-medium text-[#770C0C] py-2 border-b border-gray-100">
+            <Link href="/" className={getMobileLinkStyle('/')}>
               Home
             </Link>
-            <Link href="/about" className="text-sm font-medium text-gray-800 hover:text-[#770C0C] py-2 border-b border-gray-100">
+            <Link href="/about" className={getMobileLinkStyle('/about')}>
               About
             </Link>
-            <Link href="/contact" className="text-sm font-medium text-gray-800 hover:text-[#770C0C] py-2 border-b border-gray-100">
+            <Link href="/contact" className={getMobileLinkStyle('/contact')}>
               Contact
             </Link>
-            <Link href="/researchcreate" className="text-sm font-medium text-gray-800 hover:text-[#770C0C] py-2 border-b border-gray-100">
+            <Link href="/researchcreate" className={getMobileLinkStyle('/researchcreate')}>
               Become Researcher
             </Link>
-            <Link href="/Q&A" className="text-sm font-medium text-gray-800 hover:text-[#770C0C] py-2 border-b border-gray-100">
+            <Link href="/Q&A" className={getMobileLinkStyle('/Q&A')}>
               FAQ
             </Link>
           </div>
@@ -220,12 +240,12 @@ export default function Navbar() {
             ) : (
               <div className="space-y-3">
                 <Link href="/signup" className="block w-full">
-                  <button className="w-full bg-[#FDECEC] text-[#770C0C] py-2 px-4 rounded-lg font-medium hover:bg-[#fbd2d2] transition">
+                  <button className={`w-full bg-[#FDECEC] text-[#770C0C] py-2 px-4 rounded-lg font-medium hover:bg-[#fbd2d2] transition ${isLinkActive('/signup') ? 'bg-[#fbd2d2] font-bold' : ''}`}>
                     Create Account
                   </button>
                 </Link>
                 <Link href="/signin" className="block w-full">
-                  <button className="w-full bg-[#770C0C] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5d0a0a] transition">
+                  <button className={`w-full bg-[#770C0C] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5d0a0a] transition ${isLinkActive('/signin') ? 'bg-[#5d0a0a] font-bold' : ''}`}>
                     Sign In
                   </button>
                 </Link>
